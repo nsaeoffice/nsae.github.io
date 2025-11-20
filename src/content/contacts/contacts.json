@@ -1,0 +1,23 @@
+[
+  {
+    "id": "nsae-contact",
+    "address": "123 Astro Way, Butwal, Lumbini Province, Nepal",
+    "addressLink": "https://maps.google.com/?q=123+Astro+Way+Butwal",
+    "phoneNumbers": ["+977 9800000001", "+977 9800000002"],
+    "emails": ["info@astroengineering.com", "support@astroengineering.com"],
+    "socials": {
+      "linkedin": {
+        "handle": "astro-engineering",
+        "link": "https://linkedin.com/company/astro-engineering"
+      },
+      "x": {
+        "handle": "@AstroEng",
+        "link": "https://x.com/AstroEng"
+      },
+      "facebook": {
+        "handle": "AstroEngineering",
+        "link": "https://facebook.com/AstroEngineering"
+      }
+    }
+  }
+]

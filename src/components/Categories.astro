@@ -1,0 +1,53 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Point from "@tabler/icons/outline/point.svg";
+import Badge, { badgeVariants } from "./astro/Badge.astro";
+import type { BadgeVariantProps } from "./astro/Badge.astro";
+
+type BadgeVariant = BadgeVariantProps["variant"];
+type BadgeSize = BadgeVariantProps["size"];
+
+type Props = {
+  categories: CollectionEntry<"categories">[];
+  visibleCategoriesCount?: number;
+  showAll?: boolean;
+  badgeVariant?: BadgeVariant;
+  badgeSize?: BadgeSize;
+};
+
+const {
+  categories,
+  visibleCategoriesCount = 3,
+  showAll = false,
+  badgeVariant = "secondary",
+  badgeSize = "xs",
+} = Astro.props;
+
+const totalCount = categories.length;
+
+const categoriesToDisplay = showAll
+  ? categories
+  : categories.slice(0, visibleCategoriesCount);
+const shouldShowBadge = !showAll && totalCount > visibleCategoriesCount;
+const remainingCount = totalCount - visibleCategoriesCount;
+---
+
+<div class="flex flex-row gap-2">
+  {
+    categoriesToDisplay.map((item) => {
+      return (
+        <Badge variant={badgeVariant} size={badgeSize} class="capitalize">
+          <Point class="fill-destructive text-destructive w-4 h-4" />
+          {item.data.title}
+        </Badge>
+      );
+    })
+  }
+  {
+    shouldShowBadge && (
+      <span class="text-xs bg-secondary text-secondary-foreground border rounded-3xl px-2 py-1 capitalize">
+        +{remainingCount}
+      </span>
+    )
+  }
+</div>

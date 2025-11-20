@@ -1,0 +1,92 @@
+---
+import { getCollection } from "astro:content";
+import { SITE_DESCRIPTION, SITE_TITLE } from "@/consts";
+import BlogCard from "@/components/astro/Card/BlogCard.astro";
+import ClickableCard from "@/components/astro/Card/ClickableCard.astro";
+import BlogFeaturedCard from "@/components/astro/Card/BlogFeaturedCard.astro";
+import PageLayout from "@/layouts/PageLayout.astro";
+import { Image } from "astro:assets";
+import Badge from "@/components/astro/Badge.astro";
+import type { GetStaticPaths, Page } from "astro";
+import { PAGE_SIZE } from "@/consts";
+import Pagination from "@/components/astro/Pagination.astro";
+import type { CollectionEntry } from "astro:content";
+
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  const allPublishedPosts = (
+    await getCollection("blog", ({ data }) => {
+      return import.meta.env.MODE !== "production" || data.draft === false;
+    })
+  ).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+  const featuredPosts = allPublishedPosts.filter(({ data }) => data.featured);
+  const nonFeaturedPosts = allPublishedPosts.filter(
+    ({ data }) => !data.featured
+  );
+
+  return paginate(nonFeaturedPosts, {
+    pageSize: PAGE_SIZE,
+    props: { featuredPosts },
+  });
+};
+interface Props {
+  page: Page<CollectionEntry<"blog">>;
+  featuredPosts: CollectionEntry<"blog">[];
+}
+const { page, featuredPosts } = Astro.props;
+---
+
+<PageLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+  <header class="flex flex-col items-center justify-center py-6">
+    <Badge variant={"secondary"} size={"sm"} class="capitalize">
+      Blog & Articles
+    </Badge>
+    <h1 class="text-5xl md:text-6xl font-medium pt-4">
+      Read our latest articles
+    </h1>
+  </header>
+
+  {
+    featuredPosts.length > 0 && page.currentPage === 1 && (
+      <section class="mb-12">
+        <h2 class="text-3xl mb-6">Featured Posts</h2>
+        <div class="grid gap-8 lg:gap-10 xl:gap-18">
+          {featuredPosts.map((post) => (
+            <ClickableCard href={`/blog/${post.id}/`}>
+              <BlogFeaturedCard {...post} />
+            </ClickableCard>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <section class="mb-12">
+    <h2 class="text-3xl mb-6">All Posts</h2>
+    <div class="grid grid-cols-2 gap-8">
+      {
+        page.data.map((post) => (
+          <ClickableCard
+            class="group relative col-span-2 lg:col-span-1 border-b-2 border-dashed border-secondary-foreground last:border-b-0 lg:[&:nth-last-child(2)]:border-b-0"
+            href={`/blog/${post.id}/`}
+          >
+            <BlogCard {...post} />
+            {post.data.heroImage && (
+              <Image
+                inferSize
+                class={
+                  "absolute top-0 h-full object-cover z-0 hidden group-hover:block opacity-70"
+                }
+                src={post.data.heroImage}
+                alt={post.data.heroImageAlt ?? ""}
+              />
+            )}
+          </ClickableCard>
+        ))
+      }
+    </div>
+    <div class="flex justify-center mt-8">
+      <Pagination url={page.url} />
+    </div>
+  </section>
+</PageLayout>

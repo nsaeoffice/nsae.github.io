@@ -1,0 +1,86 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+
+import FormattedDate from "../components/FormattedDate.astro";
+import Prose from "@/components/astro/Prose.astro";
+import PageLayout from "./PageLayout.astro";
+import { getEntries } from "astro:content";
+import Categories from "@/components/Categories.astro";
+
+type Props = CollectionEntry<"blog">["data"];
+
+const {
+  title,
+  subtitle,
+  categories,
+  authors,
+  description,
+  pubDate,
+  updatedDate,
+  heroImage,
+  heroImageAlt,
+  relatedPosts,
+} = Astro.props;
+
+const authorsData = authors ? await getEntries(authors) : null;
+const categoriesData = categories ? await getEntries(categories) : null;
+---
+
+<PageLayout title={title} description={description ?? title}>
+  <article class="container py-8 space-y-8">
+    <header class="space-y-2 text-center border-b pb-4">
+      <h1
+        class="text-3xl md:text-4xl font-bold tracking-tight first-letter:capitalize"
+      >
+        {title}
+      </h1>
+      {
+        subtitle && (
+          <p class="text-muted-foreground first-letter:capitalize">
+            {subtitle}
+          </p>
+        )
+      }
+      <div class="flex flex-row justify-around items-center text-xs">
+        {categoriesData ? <Categories categories={categoriesData} /> : <div />}
+
+        <span class="text-xs text-muted-foreground capitalize">
+          <FormattedDate date={pubDate} />
+        </span>
+      </div>
+    </header>
+
+    {
+      heroImage && (
+        <div class="flex items-center justify-center overflow-hidden">
+          <Image
+            inferSize
+            class="object-cover rounded-xl max-h-1/2"
+            src={heroImage}
+            alt={heroImageAlt ?? ""}
+          />
+        </div>
+      )
+    }
+    <div class="prose max-w-6xl mx-auto dark:prose-invert">
+      <slot />
+    </div>
+
+    {
+      relatedPosts && relatedPosts.length > 0 && (
+        <div class="border-t pt-4 space-y-8">
+          <div class="flex flex-col text-center">
+            <span class="capitalize text-xl font-semibold">
+              If You Liked This...
+            </span>
+            <span class="text-sm text-muted-foreground">
+              Explore similar topics
+            </span>
+          </div>
+          dfdfd
+        </div>
+      )
+    }
+  </article>
+</PageLayout>

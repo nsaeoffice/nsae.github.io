@@ -1,0 +1,12 @@
+[
+  {
+    "id": "technology",
+    "title": "technology",
+    "description": "This is the description of technology category"
+  },
+  {
+    "id": "fashion",
+    "title": "fashion",
+    "description": "This is the description of fashion category"
+  }
+]

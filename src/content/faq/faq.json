@@ -1,0 +1,12 @@
+[
+  {
+    "id": "shipping-policy",
+    "question": "What is your shipping policy?",
+    "answer": "We ship all orders within 2 business days. Standard shipping takes 5-7 days."
+  },
+  {
+    "id": "consultation-process",
+    "question": "How does the consultation process work?",
+    "answer": "Our process begins with an initial meeting to discuss your project scope, followed by a detailed proposal and site assessment."
+  }
+]

@@ -1,0 +1,53 @@
+---
+import Categories from "@/components/Categories.astro";
+import FormattedDate from "@/components/FormattedDate.astro";
+import { getEntries } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import ArrowNarrowRight from "@tabler/icons/outline/arrow-narrow-right.svg";
+import AvatarGroup from "../AvatarGroup.astro";
+
+type Props = CollectionEntry<"blog">;
+
+const { id, data } = Astro.props;
+const { title, subtitle, pubDate, categories, authors } = data;
+
+const authorsData = authors ? await getEntries(authors) : null;
+const categoriesData = categories ? await getEntries(categories) : null;
+---
+
+<article class="space-y-2 cursor-pointer flex flex-col relative z-10 p-2">
+  <div class="flex flex-row justify-between items-center">
+    {categoriesData ? <Categories categories={categoriesData} /> : <div />}
+
+    <p class="text-xs capitalize">
+      <FormattedDate date={pubDate} />
+    </p>
+  </div>
+
+  <div class="flex flex-col gap-2 grow">
+    <a
+      class="text-2xl font-medium first-letter:capitalize group-hover:underline"
+      href={`/blog/${id}`}
+    >
+      {title}
+    </a>
+    {
+      subtitle && (
+        <span class="text-sm text-muted-foreground first-letter:capitalize">
+          {subtitle}
+        </span>
+      )
+    }
+    <div
+      class="flex flex-row items-center justify-between pt-2 pb-8 lg:pb-10 mt-auto"
+    >
+      <a
+        class="text-sm font-medium flex flex-row gap-2 items-center hover:underline"
+        href={`/blog/${id}`}
+      >
+        Read more <ArrowNarrowRight class="w-4 h-4" />
+      </a>
+      {authorsData && <AvatarGroup data={authorsData} />}
+    </div>
+  </div>
+</article>

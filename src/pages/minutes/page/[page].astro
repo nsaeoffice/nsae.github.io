@@ -1,0 +1,125 @@
+---
+import Badge from "@/components/astro/Badge.astro";
+import { SITE_DESCRIPTION, SITE_TITLE } from "../../../consts";
+
+import ArrowRight from "@tabler/icons/outline/arrow-right.svg";
+import CalendarWeek from "@tabler/icons/outline/calendar-week.svg";
+import MapPin from "@tabler/icons/outline/map-pin.svg";
+import FileText from "@tabler/icons/outline/file-text.svg";
+
+import PageLayout from "@/layouts/PageLayout.astro";
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import ClickableCard from "@/components/astro/Card/ClickableCard.astro";
+import type { GetStaticPaths, Page } from "astro";
+import { PAGE_SIZE } from "@/consts";
+import Pagination from "@/components/astro/Pagination.astro";
+
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  const allPublishedMinutes = (
+    await getCollection("minutes", ({ data }) => {
+      return import.meta.env.MODE !== "production" || data.draft === false;
+    })
+  ).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+  return paginate(allPublishedMinutes, {
+    pageSize: PAGE_SIZE,
+  });
+};
+
+interface Props {
+  page: Page<CollectionEntry<"minutes">>;
+}
+
+const { page } = Astro.props;
+
+const formatType = (type: string) => {
+  if (type === "agm") return "AGM";
+  return type.charAt(0).toUpperCase() + type.slice(1).replace("-", " ");
+};
+---
+
+<PageLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+  <main class="py-8 space-y-12">
+    <section
+      class="flex flex-col items-center justify-center gap-4 text-center"
+    >
+      <Badge variant={"secondary"} size={"sm"}>Transparency</Badge>
+      <h1 class="text-4xl md:text-6xl font-medium text-balance">
+        Official Meeting Records
+      </h1>
+      <p class="text-lg text-muted-foreground max-w-2xl text-balance">
+        Browse the minutes from our General, Executive, and Committee meetings.
+      </p>
+    </section>
+
+    <section>
+      {
+        page.data.length > 0 ? (
+          <>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+              {page.data.map((minute) => (
+                <ClickableCard
+                  class="group relative flex flex-col justify-between rounded-xl border bg-card text-card-foreground p-6 shadow-sm transition-all hover:shadow-md hover:border-primary/50 h-full"
+                  href={`/minutes/${minute.id}/`}
+                >
+                  <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center gap-1.5 text-sm text-muted-foreground">
+                        <CalendarWeek class="size-4" />
+                        <time datetime={minute.data.pubDate.toISOString()}>
+                          {minute.data.pubDate.toLocaleDateString(undefined, {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })}
+                        </time>
+                      </div>
+                      <Badge
+                        variant={
+                          minute.data.type === "agm" ? "default" : "outline"
+                        }
+                        size="xs"
+                      >
+                        {formatType(minute.data.type)}
+                      </Badge>
+                    </div>
+
+                    <div class="space-y-2">
+                      <h3 class="text-xl font-bold tracking-tight group-hover:underline decoration-2 decoration-primary/50 underline-offset-4">
+                        {minute.data.title}
+                      </h3>
+
+                      <div class="flex items-center gap-1.5 text-sm text-muted-foreground">
+                        <MapPin class="size-4" />
+                        <span>{minute.data.location}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="mt-6 flex items-center text-sm font-medium text-primary">
+                    <span class="flex items-center gap-2">
+                      <FileText class="size-4" />
+                      View Minutes
+                    </span>
+                    <ArrowRight class="ml-auto size-4 transition-transform group-hover:translate-x-1" />
+                  </div>
+                </ClickableCard>
+              ))}
+            </div>
+            <div class="flex justify-center mt-8">
+              <Pagination url={page.url} />
+            </div>
+          </>
+        ) : (
+          <div class="flex flex-col items-center justify-center py-20 text-center space-y-2 border rounded-xl border-dashed">
+            <FileText class="size-10 text-muted-foreground/50" />
+            <p class="text-xl font-medium text-muted-foreground">
+              No minutes found.
+            </p>
+          </div>
+        )
+      }
+    </section>
+  </main>
+</PageLayout>

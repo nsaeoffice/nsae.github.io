@@ -1,0 +1,110 @@
+---
+import Badge from "@/components/astro/Badge.astro";
+import PageLayout from "@/layouts/PageLayout.astro";
+import { getCollection } from "astro:content";
+import Mail from "@tabler/icons/outline/mail.svg";
+import Phone from "@tabler/icons/outline/phone.svg";
+import Map from "@tabler/icons/outline/map.svg";
+import BrandLinkedin from "@tabler/icons/outline/brand-linkedin.svg";
+import BrandX from "@tabler/icons/outline/brand-x.svg";
+import BrandFacebook from "@tabler/icons/outline/brand-facebook.svg";
+import BrandYoutube from "@tabler/icons/outline/brand-youtube.svg";
+import BrandBluesky from "@tabler/icons/outline/brand-bluesky.svg";
+
+const contactInfo = (await getCollection("contacts"))[0];
+const { data } = contactInfo;
+const { socials } = data;
+---
+
+<PageLayout
+  title="Contact Us - NSAE"
+  description="Have a question or a project in mind? - NSAE"
+>
+  <header class="flex flex-col items-center justify-center py-6">
+    <Badge variant={"secondary"} size={"sm"} class="first-letter:capitalize"
+      >Contact us</Badge
+    >
+    <h1 class="text-5xl md:text-6xl font-medium pt-4 pb-1">Get in touch</h1>
+    <p class="text-muted-foreground text-center">
+      Have a question or a project in mind? We'd love to hear from you.
+    </p>
+  </header>
+
+  <section
+    class="py-12 bg-background text-foreground max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 min-h-40"
+  >
+    <div
+      class="col-span-1 rounded-2xl p-6 bg-secondary text-secondary-foreground flex flex-col gap-4"
+    >
+      <span class="flex flex-row gap-4 items-center">
+        <Mail class="w-6 h-6" />
+        <h3 class="text-2xl font-semibold">Email</h3>
+      </span>
+      {
+        data.emails && data.emails.length > 0 && (
+          <div>
+            {data.emails.map((email) => (
+              <a href={`mailto:${email}`} class="block text-lg hover:underline">
+                {email}
+              </a>
+            ))}
+          </div>
+        )
+      }
+      <span class="text-secondary-foreground/80 mt-auto">
+        Reach out via email with any questions before our call!
+      </span>
+    </div>
+
+    <div
+      class="col-span-1 rounded-2xl p-6 bg-secondary text-secondary-foreground flex flex-col gap-4"
+    >
+      <span class="flex flex-row gap-4 items-center">
+        <Phone class="w-6 h-6" />
+        <h3 class="text-2xl font-semibold">Phone</h3>
+      </span>
+      {
+        data.phoneNumbers && data.phoneNumbers.length > 0 && (
+          <div>
+            {data.phoneNumbers.map((phone) => (
+              <a href={`tel:${phone}`} class="block text-lg hover:underline">
+                {phone}
+              </a>
+            ))}
+          </div>
+        )
+      }
+      <span class="text-secondary-foreground/80 mt-auto">
+        You can reach out to us by phone to discuss your needs.
+      </span>
+    </div>
+
+    <div
+      class="col-span-1 rounded-2xl p-6 bg-secondary text-secondary-foreground flex flex-col gap-4"
+    >
+      <span class="flex flex-row gap-4 items-center">
+        <Map class="w-6 h-6" />
+        <h3 class="text-2xl font-semibold">Visit us</h3>
+      </span>
+      <div class="text-lg">
+        {
+          data.addressLink ? (
+            <a
+              href={data.addressLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="hover:underline"
+            >
+              {data.address ?? "View on map"}
+            </a>
+          ) : (
+            <span>{data.address ?? "Address not provided"}</span>
+          )
+        }
+      </div>
+      <span class="text-secondary-foreground/80 mt-auto">
+        We are conveniently located near public transport and parking.
+      </span>
+    </div>
+  </section>
+</PageLayout>

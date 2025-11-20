@@ -1,0 +1,140 @@
+---
+import Badge from "@/components/astro/Badge.astro";
+import Button from "@/components/astro/Button/Button.astro";
+import FormattedDate from "@/components/FormattedDate.astro";
+import { Image } from "astro:assets";
+import ArrowNarrowRight from "@tabler/icons/outline/arrow-narrow-right.svg";
+import CalendarEvent from "@tabler/icons/outline/calendar-event.svg";
+import MapPin from "@tabler/icons/outline/map-pin.svg";
+import Video from "@tabler/icons/outline/video.svg";
+import ArrowUpRight from "@tabler/icons/outline/arrow-up-right.svg";
+import type { CollectionEntry } from "astro:content";
+
+type Props = CollectionEntry<"events">;
+
+const { data } = Astro.props;
+const formatEventType = (type: string) => {
+  return type
+    .split("_")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+};
+const isOnline =
+  data.location?.type === "online" || data.location?.type === "hybrid";
+---
+
+<article
+  class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-5 md:p-6"
+>
+  <div class="flex flex-col gap-3">
+    <div class="flex items-center justify-between">
+      <Badge variant="outline" class="w-fit capitalize bg-background/50">
+        {formatEventType(data.eventType)}
+      </Badge>
+      <span class="md:hidden text-xs text-muted-foreground font-medium">
+        <FormattedDate date={data.eventStart} />
+      </span>
+    </div>
+
+    <div class="flex flex-col gap-2 grow">
+      <h3
+        class="text-2xl font-semibold leading-tight group-hover:underline decoration-primary decoration-2 underline-offset-4"
+      >
+        {data.title}
+      </h3>
+      {
+        data.subtitle && (
+          <p class="text-sm text-muted-foreground line-clamp-3">
+            {data.subtitle}
+          </p>
+        )
+      }
+    </div>
+
+    <div
+      class="mt-auto hidden md:flex items-center gap-1 text-sm font-medium text-primary pt-4"
+    >
+      <span>View Details</span>
+      <ArrowNarrowRight
+        class="w-4 h-4 group-hover:translate-x-1 transition-transform"
+      />
+    </div>
+  </div>
+
+  <div
+    class="flex flex-col gap-5 lg:border-l border-border/10 lg:pl-6 justify-center"
+  >
+    <div class="flex gap-3 items-start">
+      <div class="p-2 bg-background/50 rounded-md shrink-0">
+        <CalendarEvent class="w-5 h-5 text-primary" />
+      </div>
+      <div>
+        <p class="font-medium text-sm">Date</p>
+        <p class="text-sm text-muted-foreground">
+          <FormattedDate date={data.eventStart} />
+          {
+            data.eventEnd > data.eventStart && (
+              <>
+                {" "}
+                - <FormattedDate date={data.eventEnd} />
+              </>
+            )
+          }
+        </p>
+      </div>
+    </div>
+
+    <div class="flex gap-3 items-start">
+      <div class="p-2 bg-background/50 rounded-md shrink-0">
+        {
+          isOnline ? (
+            <Video class="w-5 h-5 text-primary" />
+          ) : (
+            <MapPin class="w-5 h-5 text-primary" />
+          )
+        }
+      </div>
+      <div class="min-w-0">
+        <p class="font-medium text-sm">
+          {isOnline ? "Online" : "Location"}
+        </p>
+        <p class="text-sm text-muted-foreground truncate">
+          {
+            data.location?.type === "in_person"
+              ? data.location.venueName
+              : "Join via Link"
+          }
+        </p>
+        {
+          data.location?.city && (
+            <p class="text-xs text-muted-foreground/70">{data.location.city}</p>
+          )
+        }
+      </div>
+    </div>
+
+    {
+      data.registrationLink && (
+        <div class="pt-2">
+          <Button href={data.registrationLink}>
+            Register Now
+            <ArrowUpRight class={"ml-2 size-4"} />
+          </Button>
+        </div>
+      )
+    }
+  </div>
+
+  {
+    data.coverImage && (
+      <div class="md:col-span-2 lg:col-span-1 rounded-xl overflow-hidden min-h-[200px] lg:h-full relative group-hover:shadow-inner">
+        <Image
+          inferSize
+          class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          src={data.coverImage}
+          alt={data.title ?? ""}
+        />
+      </div>
+    )
+  }
+</article>

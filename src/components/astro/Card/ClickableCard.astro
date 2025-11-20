@@ -1,0 +1,62 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"div"> {
+  href: string;
+  ariaLabel?: string;
+  class?: string;
+}
+
+const { href, ariaLabel, class: className, ...rest } = Astro.props;
+---
+
+<div
+  role="link"
+  tabindex="0"
+  class:list={["clickable-card", className]}
+  data-href={href}
+  aria-label={ariaLabel || `Read more at ${href}`}
+  {...rest}
+>
+  <slot />
+</div>
+
+<script>
+  import { prefetch } from "astro:prefetch";
+
+  function initClickableCards() {
+    document
+      .querySelectorAll<HTMLElement>(".clickable-card")
+      .forEach((card) => {
+        if (card.dataset.clickableInit === "true") return;
+        card.dataset.clickableInit = "true";
+
+        const href = card.dataset.href;
+        if (!href) return;
+
+        card.addEventListener("click", () => {
+          window.location.href = href;
+        });
+
+        card.addEventListener("keypress", (e) => {
+          if ((e as KeyboardEvent).key === "Enter") {
+            window.location.href = href;
+          }
+        });
+
+        card.addEventListener("mouseenter", () => {
+          prefetch(href);
+        });
+      });
+  }
+
+  document.addEventListener("DOMContentLoaded", initClickableCards);
+
+  document.addEventListener("astro:page-load", initClickableCards);
+</script>
+
+<style>
+  .clickable-card {
+    cursor: pointer;
+  }
+</style>

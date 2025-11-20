@@ -1,0 +1,50 @@
+---
+import Badge from "@/components/astro/Badge.astro";
+import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
+
+import Point from "@tabler/icons/outline/point.svg";
+import PageLayout from "@/layouts/PageLayout.astro";
+import Button from "@/components/astro/Button/Button.astro";
+import { Image } from "astro:assets";
+import Faq from "@/components/sections/Faq.astro";
+---
+
+<PageLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+  <section
+    class="relative flex min-h-[70vh] items-center overflow-hidden px-6 py-20 md:px-12 md:py-32"
+  >
+    <div class="relative z-20 flex max-w-4xl flex-col gap-6 md:gap-8">
+      <h2
+        class="text-[3.5rem] font-extralight leading-[1] text-white md:text-[6rem]"
+      >
+        <Badge class={"z-20 absolute -top-6 right-1/2"} size={"sm"}>NSAE</Badge>
+        <span class="font-bold italic underline underline-offset-8"
+          >Engineering</span
+        >
+        Tomorrow’s Food & Environmental Systems
+      </h2>
+
+      <p class="max-w-2xl text-lg text-white/75">
+        NSAE connects leading engineers, scientists, and students dedicated to
+        creating practical solutions for real‑world agricultural challenges.
+      </p>
+
+      <div class="mt-4">
+        <Button class={"rounded-2xl"}>Learn More</Button>
+      </div>
+    </div>
+
+    <div class="absolute inset-0 z-10">
+      <div class="absolute inset-0 z-10 bg-black/60 rounded-2xl"></div>
+
+      <Image
+        class="absolute inset-0 h-full w-full object-cover rounded-2xl"
+        alt=""
+        inferSize
+        src={"https://cdn.prod.website-files.com/68d7c06dc68ea0c551b91d3d/68dbbabca616d78487b19aa2_Home%20A.webp"}
+      />
+    </div>
+  </section>
+
+  <Faq />
+</PageLayout>

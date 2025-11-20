@@ -1,0 +1,127 @@
+---
+import ArrowLeft from "@tabler/icons/outline/arrow-left.svg";
+import ArrowRight from "@tabler/icons/outline/arrow-right.svg";
+
+interface Url {
+  current: string;
+  prev: string | undefined;
+  next: string | undefined;
+  first: string | undefined;
+  last: string | undefined;
+}
+
+const { url } = Astro.props as { url: Url };
+const currentPage = Number(url.current.split("/").pop());
+const lastPage = Number(url.last?.split("/").pop());
+---
+
+{
+  (url.prev || url.next) && (
+    <nav aria-label="Pagination">
+      <ul class="flex items-center space-x-2">
+        {url.prev && (
+          <li>
+            <a
+              data-astro-prefetch
+              href={url.prev}
+              class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-input bg-background text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+              rel="prev"
+              aria-label="Go to previous page"
+            >
+              <ArrowLeft class={"size-4"} />
+            </a>
+          </li>
+        )}
+
+        {currentPage > 2 && (
+          <li>
+            <a
+              data-astro-prefetch
+              href={url.first}
+              class="inline-flex h-9 min-w-9 items-center justify-center rounded-md border border-input bg-background px-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+            >
+              1
+            </a>
+          </li>
+        )}
+
+        {currentPage > 3 && (
+          <li>
+            <span class="inline-flex h-9 w-9 items-center justify-center text-xl text-muted-foreground">
+              ...
+            </span>
+          </li>
+        )}
+
+        {url.prev && (
+          <li>
+            <a
+              data-astro-prefetch
+              href={url.prev}
+              class="inline-flex h-9 min-w-9 items-center justify-center rounded-md border border-input bg-background px-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+            >
+              {currentPage - 1}
+            </a>
+          </li>
+        )}
+
+        <li>
+          <a
+            data-astro-prefetch
+            href={url.current}
+            class="inline-flex h-9 min-w-9 items-center justify-center rounded-md border bg-primary px-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            aria-current="page"
+          >
+            {currentPage}
+          </a>
+        </li>
+
+        {url.next && (
+          <li>
+            <a
+              data-astro-prefetch
+              href={url.next}
+              class="inline-flex h-9 min-w-9 items-center justify-center rounded-md border border-input bg-background px-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+            >
+              {currentPage + 1}
+            </a>
+          </li>
+        )}
+
+        {lastPage && lastPage - currentPage > 2 && (
+          <li>
+            <span class="inline-flex h-9 w-9 items-center justify-center text-xl text-muted-foreground">
+              ...
+            </span>
+          </li>
+        )}
+
+        {url.last && currentPage < lastPage - 1 && (
+          <li>
+            <a
+              data-astro-prefetch
+              href={url.last}
+              class="inline-flex h-9 min-w-9 items-center justify-center rounded-md border border-input bg-background px-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+            >
+              {lastPage}
+            </a>
+          </li>
+        )}
+
+        {url.next && (
+          <li>
+            <a
+              data-astro-prefetch
+              href={url.next}
+              class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-input bg-background text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+              rel="next"
+              aria-label="Go to next page"
+            >
+              <ArrowRight class={"size-4"} />
+            </a>
+          </li>
+        )}
+      </ul>
+    </nav>
+  )
+}

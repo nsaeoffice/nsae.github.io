@@ -1,0 +1,52 @@
+{
+  "title": "15th Executive Committee (2024-2025)",
+  "committeeIteration": 15,
+  "committeeMembers": [
+    {
+      "position": "president",
+      "name": "Dr. Ramesh Sharma",
+      "prefix": ["dr"],
+      "profileImage": "https://i.pravatar.cc/1001",
+      "portfolio": "https://example.com/portfolio/ramesh",
+      "neaRegNo": "123-A"
+    },
+    {
+      "position": "vice-president",
+      "name": "Er. Sita Poudel",
+      "prefix": ["er"],
+      "profileImage": "https://i.pravatar.cc/1000"
+    },
+    {
+      "position": "secretary",
+      "name": "Mr. Hari Adhikari",
+      "prefix": ["mr"],
+      "necRegNo": "456-B"
+    },
+    {
+      "position": "joint-secretary",
+      "name": "Ms. Gita Thapa",
+      "prefix": ["ms"]
+    },
+    {
+      "position": "treasurer",
+      "name": "Er. Bishnu Karki",
+      "prefix": ["er"]
+    },
+    {
+      "position": "member",
+      "name": "Mr. Anil Shrestha",
+      "prefix": ["mr"]
+    },
+    {
+      "position": "member",
+      "name": "Ms. Manju Gurung",
+      "prefix": ["ms"],
+      "profileImage": "https://i.pravatar.cc/1003"
+    },
+    {
+      "position": "corporate-member",
+      "name": "TechCorp Solutions",
+      "profileImage": "https://i.pravatar.cc/1050"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+---
+import { SITE_TITLE } from "../consts";
+import Button from "./astro/Button/Button.astro";
+import HeaderLink from "./HeaderLink.astro";
+import ArrowUpRight from "@tabler/icons/outline/arrow-up-right.svg";
+---
+
+<header
+  class="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 flex flex-row gap-2 items-center"
+>
+  <nav
+    class="flex flex-nowrap whitespace-nowrap gap-1 items-center bg-foreground text-background rounded-full p-2"
+  >
+    <HeaderLink href="/">Home</HeaderLink>
+    <HeaderLink href="/about">About us</HeaderLink>
+    <HeaderLink href="/blog">Blog</HeaderLink>
+    <HeaderLink href="/events">Events</HeaderLink>
+  </nav>
+  <Button
+    class="rounded-full items-center pr-2 bg-foreground h-fit"
+    href={"/contact"}
+  >
+    Contact
+    <span class="bg-background text-foreground rounded-full p-1">
+      <ArrowUpRight class="w-4 h-4 shrink-0" />
+    </span>
+  </Button>
+</header>

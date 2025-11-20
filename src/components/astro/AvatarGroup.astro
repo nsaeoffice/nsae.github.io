@@ -1,0 +1,104 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Avatar from "./Avatar/Avatar.astro";
+import AvatarImage from "./Avatar/AvatarImage.astro";
+import AvatarFallback from "./Avatar/AvatarFallback.astro";
+import { cn } from "@/lib/utils";
+
+type Authors = CollectionEntry<"authors">;
+
+type Props = {
+  data: CollectionEntry<"authors">[];
+  visibleAvatarCount?: number;
+  showNames?: boolean;
+  class?: string;
+};
+const {
+  data,
+  visibleAvatarCount = 3,
+  showNames = false,
+  class: className,
+} = Astro.props;
+
+const getInitials = (name: string = "") => {
+  return (
+    name
+      ?.split(" ")
+      .map((n) => n[0])
+      .join("")
+      .substring(0, 2)
+      .toUpperCase() || "?"
+  );
+};
+const formatUserNames = (users: Authors[], nameLimit: number) => {
+  const userNames = users
+    .map((user) => (typeof user === "object" ? user.data.name : null))
+    .filter(Boolean) as string[];
+
+  const count = userNames.length;
+
+  if (count === 0) return "";
+
+  if (count <= nameLimit) {
+    if (count === 1) return userNames[0];
+    if (count === 2) return `${userNames[0]} and ${userNames[1]}`;
+
+    return `${userNames.slice(0, -1).join(", ")} and ${userNames[count - 1]}`;
+  }
+
+  const visibleNames = userNames.slice(0, nameLimit);
+  const othersCount = count - nameLimit;
+  const othersText = `and ${othersCount} other${othersCount > 1 ? "s" : ""}`;
+
+  return `${visibleNames.join(", ")} ${othersText}`;
+};
+const totalCount = data.length;
+---
+
+<div class={cn(className, "flex items-center gap-2")}>
+  <div class="flex -space-x-3">
+    {
+      data.slice(0, visibleAvatarCount).map((user, index) => {
+        if (typeof user !== "object") return null;
+        const profileImage = user.data.profileImage;
+        const isStringUrl = typeof profileImage === "string";
+
+        const isImageObject =
+          typeof profileImage === "object" && profileImage !== null;
+        return (
+          <Avatar size={"sm"}>
+            {isStringUrl && (
+              <AvatarImage src={profileImage} alt={user.data.name || "User"} />
+            )}
+
+            {isImageObject && (
+              <AvatarImage
+                image={profileImage}
+                alt={user.data.name || "User"}
+              />
+            )}
+            <AvatarFallback class="text-xs">
+              {getInitials(user.data.name ?? "User")}
+            </AvatarFallback>
+          </Avatar>
+        );
+      })
+    }
+    {
+      totalCount > visibleAvatarCount && (
+        <Avatar size={"sm"}>
+          <AvatarFallback class="text-xs">
+            +{totalCount - visibleAvatarCount}
+          </AvatarFallback>
+        </Avatar>
+      )
+    }
+  </div>
+  {
+    showNames && (
+      <span class="text-sm text-muted-foreground truncate capitalize">
+        {formatUserNames(data, visibleAvatarCount)}
+      </span>
+    )
+  }
+</div>

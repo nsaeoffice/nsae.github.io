@@ -1,0 +1,135 @@
+---
+import { type CollectionEntry, getCollection, render } from "astro:content";
+
+import PageLayout from "@/layouts/PageLayout.astro";
+import FormattedDate from "@/components/FormattedDate.astro";
+import Badge from "@/components/astro/Badge.astro";
+
+import MapPin from "@tabler/icons/outline/map-pin.svg";
+import CalendarWeek from "@tabler/icons/outline/calendar-week.svg";
+import Building from "@tabler/icons/outline/building.svg";
+import ArrowLeft from "@tabler/icons/outline/arrow-left.svg";
+import World from "@tabler/icons/outline/world.svg";
+import Point from "@tabler/icons/outline/point.svg";
+
+export async function getStaticPaths() {
+  const allVacancies = await getCollection("careers", ({ data }) => {
+    return import.meta.env.MODE !== "production" || data.draft === false;
+  });
+
+  return allVacancies.map((vacancy) => ({
+    params: { slug: vacancy.id },
+    props: vacancy,
+  }));
+}
+
+type Props = CollectionEntry<"careers">;
+const vacancy = Astro.props;
+const { Content } = await render(vacancy);
+
+const {
+  title,
+  description,
+  type,
+  status,
+  company,
+  location,
+  postedDate,
+  closingDate,
+} = vacancy.data;
+
+const isClosed = status === "closed";
+---
+
+<PageLayout title={title} description={description ?? title}>
+  <article class="py-8 space-y-8">
+    <header class="space-y-6 text-center border-b pb-8">
+      <div class="flex items-center">
+        <a
+          href="/careers"
+          class="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+        >
+          <ArrowLeft class="size-4" />
+          Back to Vacancies
+        </a>
+      </div>
+      <div class="flex flex-wrap justify-center gap-2">
+        <Badge variant={isClosed ? "destructive" : "secondary"}>
+          {isClosed ? "Position Closed" : type}
+        </Badge>
+        {company?.name && <Badge variant="outline">{company.name}</Badge>}
+      </div>
+
+      <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-balance">
+        {title}
+      </h1>
+
+      <div
+        class="flex flex-wrap flex-row justify-center items-center gap-x-6 gap-y-2 text-sm text-muted-foreground"
+      >
+        {
+          company && (
+            <div class="flex items-center gap-1.5">
+              <Building class="size-4" />
+              {company.website ? (
+                <a
+                  href={company.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="hover:underline inline-flex items-center gap-1"
+                >
+                  {company.name}
+                </a>
+              ) : (
+                <span>{company.name}</span>
+              )}
+            </div>
+          )
+        }
+
+        <div class="flex items-center gap-1.5">
+          <MapPin class="size-4" />
+          <span>{location}</span>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <CalendarWeek class="size-4" />
+          <span>
+            Posted: <FormattedDate date={postedDate} />
+          </span>
+        </div>
+
+        {
+          closingDate && !isClosed && (
+            <span class="flex items-center gap-1 text-foreground font-medium italic hover:underline hover:underline-offset-1">
+              <Point class="fill-destructive text-destructive w-3 h-3" />
+              Closes: <FormattedDate date={closingDate} />
+            </span>
+          )
+        }
+      </div>
+    </header>
+
+    <div class="prose max-w-6xl mx-auto dark:prose-invert">
+      <Content />
+    </div>
+
+    <div class="border-t pt-8 space-y-4">
+      {
+        isClosed ? (
+          <div class="p-4 bg-destructive/10 text-destructive rounded-lg text-center">
+            <p class="font-medium">This position is currently closed.</p>
+          </div>
+        ) : (
+          <div class="flex flex-col items-center text-center gap-4">
+            <h3 class="text-xl font-semibold">Interested in this role?</h3>
+            <p class="text-muted-foreground text-sm">
+              Please review the requirements above and apply via the provided
+              method.
+            </p>
+          </div>
+        )
+      }
+    </div>
+  </article>
+</PageLayout>

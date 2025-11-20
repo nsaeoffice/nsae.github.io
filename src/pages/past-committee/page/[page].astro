@@ -1,0 +1,96 @@
+---
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import ClickableCard from "@/components/astro/Card/ClickableCard.astro";
+import PageLayout from "@/layouts/PageLayout.astro";
+import Badge from "@/components/astro/Badge.astro";
+import ArrowRight from "@tabler/icons/outline/arrow-right.svg";
+import type { GetStaticPaths, Page } from "astro";
+import { PAGE_SIZE } from "@/consts";
+import Pagination from "@/components/astro/Pagination.astro";
+
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  const allCommittees = (
+    await getCollection("committees", ({ data }) => {
+      return import.meta.env.MODE !== "production" || data.draft === false;
+    })
+  ).sort(
+    (a, b) =>
+      b.data.committeeIteration.valueOf() - a.data.committeeIteration.valueOf()
+  );
+
+  return paginate(allCommittees, {
+    pageSize: PAGE_SIZE,
+  });
+};
+
+interface Props {
+  page: Page<CollectionEntry<"committees">>;
+}
+
+const { page } = Astro.props;
+
+const pageTitle = "Past Committees";
+const pageDescription =
+  "Browse the dedicated members and executive boards that have shaped our journey through the years.";
+---
+
+<PageLayout title={pageTitle} description={pageDescription}>
+  <main class="space-y-12 py-8">
+    <section
+      class="flex flex-col items-center justify-center text-center gap-4"
+    >
+      <Badge variant={"secondary"} size={"sm"}>Archives</Badge>
+
+      <h1 class="text-4xl md:text-6xl font-medium">Leadership History</h1>
+
+      <p class="text-lg text-muted-foreground max-w-2xl text-balance">
+        Browse the dedicated members and executive boards that have shaped our
+        journey through the years.
+      </p>
+    </section>
+
+    <section>
+      {
+        page.data.length > 0 ? (
+          <>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+              {page.data.map((committee) => (
+                <ClickableCard
+                  href={`/past-committee/${committee.id}/`}
+                  ariaLabel={`View details for ${committee.data.title}`}
+                  class="group relative flex flex-col justify-between rounded-xl border bg-card text-card-foreground p-6  transition-all"
+                >
+                  <div class="space-y-2">
+                    <div class="flex items-start justify-between">
+                      <span class="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                        Iteration {committee.data.committeeIteration}
+                      </span>
+                      <ArrowRight class="size-5 text-muted-foreground transition-transform group-hover:-rotate-45 group-hover:text-primary" />
+                    </div>
+
+                    <h3 class="text-xl font-medium tracking-tight group-hover:underline decoration-2 decoration-primary/50 underline-offset-4">
+                      {committee.data.title}
+                    </h3>
+                  </div>
+                </ClickableCard>
+              ))}
+            </div>
+            <div class="flex justify-center mt-8">
+              <Pagination url={page.url} />
+            </div>
+          </>
+        ) : (
+          <div class="flex flex-col items-center justify-center py-20 text-center space-y-2">
+            <p class="text-xl font-medium text-muted-foreground">
+              No past committees found.
+            </p>
+            <p class="text-sm text-muted-foreground/60">
+              Check back later for updates.
+            </p>
+          </div>
+        )
+      }
+    </section>
+  </main>
+</PageLayout>

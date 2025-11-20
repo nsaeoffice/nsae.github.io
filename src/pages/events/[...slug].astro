@@ -1,0 +1,509 @@
+---
+import { SITE_DESCRIPTION, SITE_TITLE } from "@/consts";
+import PageLayout from "@/layouts/PageLayout.astro";
+import {
+  type CollectionEntry,
+  getCollection,
+  getEntry,
+  render,
+} from "astro:content";
+import { Image } from "astro:assets";
+
+import CalendarWeek from "@tabler/icons/outline/calendar-week.svg";
+import ArrowLeft from "@tabler/icons/outline/arrow-left.svg";
+import World from "@tabler/icons/outline/world.svg";
+import Point from "@tabler/icons/outline/point.svg";
+import Clock from "@tabler/icons/outline/clock.svg";
+import MapPin from "@tabler/icons/outline/map-pin.svg";
+import DeviceDesktop from "@tabler/icons/outline/device-desktop.svg";
+import ArrowUpRight from "@tabler/icons/outline/arrow-up-right.svg";
+import User from "@tabler/icons/outline/user.svg";
+import Building from "@tabler/icons/outline/building.svg";
+import Mail from "@tabler/icons/outline/mail.svg";
+import Phone from "@tabler/icons/outline/phone.svg";
+import LinkIcon from "@tabler/icons/outline/link.svg";
+import CalendarCheck from "@tabler/icons/outline/calendar-check.svg";
+import Map from "@tabler/icons/outline/map.svg";
+import Badge from "@/components/astro/Badge.astro";
+import Button from "@/components/astro/Button/Button.astro";
+
+// === Data Fetching ===
+export async function getStaticPaths() {
+  const events = await getCollection("events", ({ data }) => {
+    return import.meta.env.MODE !== "production" || data.draft === false;
+  });
+
+  return events.map((event) => ({
+    params: { slug: event.id },
+    props: event,
+  }));
+}
+
+type Props = CollectionEntry<"events">;
+const event = Astro.props;
+const { data } = event;
+const { Content } = await render(event);
+
+const formatDate = (
+  date: Date | undefined,
+  options: Intl.DateTimeFormatOptions = {}
+) => {
+  if (!date) return "";
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    ...options,
+  });
+};
+
+const formatTime = (date: Date | undefined) => {
+  if (!date) return "";
+  return date.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+};
+
+let dateDisplay = "";
+let durationDisplay = "";
+let startTimeDisplay = "N/A";
+let endTimeDisplay = "N/A";
+
+if (data.eventStart) {
+  const startStr = formatDate(data.eventStart);
+  const endStr = data.eventEnd ? formatDate(data.eventEnd) : startStr;
+
+  if (startStr === endStr) {
+    dateDisplay = startStr;
+  } else if (data.eventEnd) {
+    dateDisplay = `${startStr} – ${endStr}`;
+  } else {
+    dateDisplay = startStr;
+  }
+}
+
+if (data.eventStart) {
+  startTimeDisplay = formatTime(data.eventStart);
+  endTimeDisplay = data.eventEnd ? formatTime(data.eventEnd) : "N/A";
+}
+
+if (data.eventStart && data.eventEnd) {
+  const diffMs = data.eventEnd.getTime() - data.eventStart.getTime();
+  if (diffMs > 86400000) {
+    const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24)) + 1;
+    durationDisplay = `${diffDays} days`;
+  } else {
+    const diffHours = diffMs / (1000 * 60 * 60);
+    const diffMins = (diffMs / (1000 * 60)) % 60;
+    if (diffHours >= 1) {
+      const hours = Math.floor(diffHours);
+      const mins = Math.round(diffMins);
+      durationDisplay = mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
+    } else {
+      durationDisplay = `${Math.round(diffMs / (1000 * 60))}m`;
+    }
+  }
+}
+
+let locationDisplay = "Location TBD";
+let isOnline = false;
+if (data.location) {
+  if (data.location.type === "online") {
+    locationDisplay = "Online Event";
+    isOnline = true;
+  } else {
+    const parts = [
+      data.location.venueName,
+      data.location.city,
+      data.location.state,
+    ].filter(Boolean);
+    locationDisplay = parts.join(", ");
+    if (!locationDisplay) locationDisplay = "In-Person Event";
+    if (data.location.type === "hybrid") locationDisplay += " (Hybrid)";
+  }
+}
+
+const sessionsByDay: Record<string, typeof data.eventSchedule> = {};
+
+if (data.eventSchedule) {
+  data.eventSchedule.forEach((session) => {
+    const dayLabel =
+      session.dayLabel ||
+      formatDate(session.day || session.startTime, {
+        weekday: "long",
+        month: "short",
+        day: "numeric",
+      });
+    if (!sessionsByDay[dayLabel]) {
+      sessionsByDay[dayLabel] = [];
+    }
+    sessionsByDay[dayLabel]?.push(session);
+  });
+}
+const resolvedInstructors = await Promise.all(
+  (data.instructors || []).map(async (inst) => {
+    if (inst.instructorType === "nsae_member" && inst.nsaeMember) {
+      const authorEntry = await getEntry(inst.nsaeMember);
+      return { ...inst, authorData: authorEntry?.data };
+    }
+    return inst;
+  })
+);
+---
+
+<PageLayout title={data.title} description={data.subtitle || SITE_DESCRIPTION}>
+  <article class="py-8 md:py-12">
+    <header
+      class="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-8 lg:gap-12 mb-12"
+    >
+      <div class="flex flex-col justify-between gap-6">
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-row items-center gap-4">
+            <span
+              class="flex h-fit w-fit items-center justify-center rounded-full bg-primary p-3 text-primary-foreground"
+            >
+              {
+                isOnline ? (
+                  <World class="h-5 w-5" />
+                ) : (
+                  <MapPin class="h-5 w-5" />
+                )
+              }
+            </span>
+            <div class="flex flex-col capitalize">
+              <span class="text-lg font-semibold">{dateDisplay}</span>
+              <span class="text-md text-muted-foreground"
+                >{locationDisplay}</span
+              >
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-2 capitalize">
+            <h1 class="text-3xl md:text-4xl font-bold">{data.title}</h1>
+            {
+              data.subtitle && (
+                <p class="text-lg text-muted-foreground">{data.subtitle}</p>
+              )
+            }
+          </div>
+        </div>
+
+        <div class="flex flex-row flex-wrap justify-between">
+          <div
+            class="flex flex-row items-center justify-between gap-4 rounded-lg border p-4 sm:justify-start bg-card text-card-foreground w-fit"
+          >
+            <div class="text-center">
+              <span
+                class="text-xs text-muted-foreground uppercase tracking-wider"
+                >Start</span
+              >
+              <p class="font-semibold">{startTimeDisplay}</p>
+            </div>
+            {
+              durationDisplay && (
+                <Badge
+                  size={"lg"}
+                  class="capitalize flex flex-row items-center text-sm"
+                >
+                  <CalendarWeek class="h-6 w-6 shrink-0" />
+                  {durationDisplay}
+                </Badge>
+              )
+            }
+
+            <div class="text-center">
+              <span
+                class="text-xs text-muted-foreground uppercase tracking-wider"
+                >End</span
+              >
+              <p class="font-semibold">{endTimeDisplay}</p>
+            </div>
+          </div>
+
+          {
+            data.registrationLink && (
+              <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                <Button href={data.registrationLink}>
+                  Register Now
+                  <ArrowUpRight class={"ml-2 size-4"} />
+                </Button>
+                {data.registrationDeadline && (
+                  <div class="flex items-center gap-2 text-sm text-muted-foreground">
+                    <CalendarWeek class="h-4 w-4" />
+                    <span>
+                      Deadline: {formatDate(data.registrationDeadline)}
+                    </span>
+                  </div>
+                )}
+              </div>
+            )
+          }
+        </div>
+      </div>
+
+      {
+        data.coverImage && (
+          <div class="relative w-full aspect-video lg:aspect-[4/3] overflow-hidden rounded-lg shadow-md">
+            <Image
+              src={data.coverImage}
+              alt={data.title}
+              class="object-cover w-full h-full"
+            />
+          </div>
+        )
+      }
+    </header>
+
+    <hr class="my-8 border-muted" />
+
+    <div class="grid grid-cols-1 lg:grid-cols-[3fr_1.5fr] gap-8 lg:gap-12">
+      <div class="flex flex-col gap-10">
+        <section>
+          <h2 class="text-2xl font-bold mb-4">About the Event</h2>
+          <div class="prose prose-lg dark:prose-invert max-w-none">
+            <Content />
+          </div>
+        </section>
+
+        {
+          Object.keys(sessionsByDay).length > 0 && (
+            <section>
+              <h2 class="text-2xl font-bold mb-6">Schedule</h2>
+              <div class="flex flex-col gap-8">
+                {Object.entries(sessionsByDay).map(([dayLabel, sessions]) => (
+                  <div class="rounded-xl border bg-card text-card-foreground shadow-sm p-4">
+                    <h3 class="font-semibold leading-none tracking-tight text-lg text-center">
+                      {dayLabel}
+                    </h3>
+
+                    <div class="pt-0 mt-4 flex flex-col gap-4">
+                      {sessions?.map((session) => (
+                        <div class="group relative grid gap-1 pb-4 last:pb-0 border-l-2 border-muted pl-4 hover:border-primary transition-colors">
+                          <p class="flex flex-row items-center gap-1 text-sm leading-none text-muted-foreground">
+                            <Clock class="size-4 shrink-0" />
+                            {formatTime(session.startTime)} –
+                            {formatTime(session.endTime)}
+                          </p>
+                          <p class="font-bold text-lg leading-none">
+                            {session.sessionTitle}
+                          </p>
+
+                          <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground mt-1">
+                            {session.location && (
+                              <span class="flex items-center gap-1">
+                                <MapPin class="h-3.5 w-3.5" />
+                                {session.location}
+                              </span>
+                            )}
+                            {session.speaker && (
+                              <span class="flex items-center gap-1">
+                                <User class="size-4" />
+                                {session.speaker}
+                              </span>
+                            )}
+                          </div>
+                          {session.description && (
+                            <p class="text-sm text-muted-foreground mt-2">
+                              {session.description}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )
+        }
+      </div>
+
+      <aside class="flex flex-col gap-6 lg:sticky lg:top-24 h-fit">
+        {
+          data.location && (
+            <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+              <div class="p-6">
+                <h3 class="text-xl font-semibold mb-4">Event Details</h3>
+                <div class="flex flex-col gap-3 text-sm">
+                  {data.location.type !== "online" && (
+                    <>
+                      {data.location.venueName && (
+                        <span class="font-medium text-base">
+                          {data.location.venueName}
+                        </span>
+                      )}
+                      {(data.location.address || data.location.city) && (
+                        <span class="text-muted-foreground">
+                          {[
+                            data.location.address,
+                            data.location.city,
+                            data.location.state,
+                          ]
+                            .filter(Boolean)
+                            .join(", ")}
+                        </span>
+                      )}
+                      {data.location.mapsLink && (
+                        <a
+                          href={data.location.mapsLink}
+                          target="_blank"
+                          class="flex items-center gap-2 font-medium text-primary hover:underline mt-1"
+                        >
+                          <Map class="h-4 w-4" />
+                          View on Map
+                        </a>
+                      )}
+                    </>
+                  )}
+
+                  {data.location.type !== "in_person" && (
+                    <div class="flex flex-col gap-2 mt-2 pt-2 border-t border-dashed">
+                      {data.location.meetingUrl && (
+                        <a
+                          href={data.location.meetingUrl}
+                          target="_blank"
+                          class="flex items-center gap-2 font-medium text-primary hover:underline"
+                        >
+                          <LinkIcon class="h-4 w-4" />
+                          Join Online Meeting
+                        </a>
+                      )}
+                      {data.location.meetingId && (
+                        <p>
+                          Meeting ID:
+                          <span class="font-mono bg-muted px-1 rounded">
+                            {data.location.meetingId}
+                          </span>
+                        </p>
+                      )}
+                      {data.location.meetingPassword && (
+                        <p>
+                          Password:
+                          <span class="font-mono bg-muted px-1 rounded">
+                            {data.location.meetingPassword}
+                          </span>
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )
+        }
+
+        {
+          resolvedInstructors && resolvedInstructors.length > 0 && (
+            <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+              <div class="p-6">
+                <h3 class="text-xl font-semibold mb-4">
+                  Instructors & Speakers
+                </h3>
+                <div class="flex flex-col gap-4">
+                  {resolvedInstructors.map((instructor) => {
+                    let name = instructor.externalName;
+                    let position = instructor.externalPosition || "Instructor";
+                    let imageSrc = instructor.photo;
+
+                    if (
+                      instructor.instructorType === "nsae_member" &&
+                      instructor.authorData
+                    ) {
+                      name = instructor.authorData.name;
+                      position =
+                        instructor.authorData.position || "NSAE Member";
+                      imageSrc = instructor.authorData.profileImage;
+                    } else if (instructor.instructorType === "organization") {
+                      name = instructor.organizationName;
+                      position = "Organization";
+                    }
+
+                    return (
+                      <div class="flex items-center gap-3">
+                        <div class="relative h-10 w-10 shrink-0 overflow-hidden rounded-full bg-muted flex items-center justify-center">
+                          {imageSrc && typeof imageSrc === "object" ? (
+                            <Image
+                              src={imageSrc}
+                              alt={name || ""}
+                              class="aspect-square h-full w-full object-cover"
+                            />
+                          ) : instructor.instructorType === "organization" ? (
+                            <Building class="size-4 text-muted-foreground" />
+                          ) : (
+                            <User class={"size-4 text-muted-foreground"} />
+                          )}
+                        </div>
+                        <div class="text-sm">
+                          <p class="font-semibold">{name}</p>
+                          <p class="text-muted-foreground text-xs">
+                            {position}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )
+        }
+
+        {
+          data.contactPersons && data.contactPersons.length > 0 && (
+            <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+              <div class="p-6">
+                <h3 class="text-xl font-semibold mb-4">Contact</h3>
+                <div class="flex flex-col gap-5">
+                  {data.contactPersons.map((person) => (
+                    <div
+                      class={
+                        person.isPrimary
+                          ? "relative pl-3 border-l-2 border-primary"
+                          : ""
+                      }
+                    >
+                      <p class="text-sm font-semibold flex items-center gap-2">
+                        {person.name}
+                        {person.isPrimary && (
+                          <span class="text-[10px] uppercase font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded">
+                            Primary
+                          </span>
+                        )}
+                      </p>
+                      <p class="text-xs text-muted-foreground mb-2">
+                        {person.role}
+                      </p>
+
+                      <div class="flex flex-col gap-1">
+                        {person.email && (
+                          <a
+                            href={`mailto:${person.email}`}
+                            class="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                          >
+                            <Mail class={"size-4"} />
+                            {person.email}
+                          </a>
+                        )}
+                        {person.phone && (
+                          <a
+                            href={`tel:${person.phone}`}
+                            class="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                          >
+                            <Phone class={"size-4"} />
+                            {person.phone}
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )
+        }
+      </aside>
+    </div>
+  </article>
+</PageLayout>
