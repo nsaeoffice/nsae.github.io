@@ -5,127 +5,117 @@ import Brightness from "@tabler/icons/outline/brightness.svg";
 const today = new Date();
 ---
 
-<footer class="border-t border-border bg-secondary p-8 rounded-t-xl">
-  <div class="mx-auto px-4 lg:px-8">
-    <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
-      <div>
-        <div class="flex items-center gap-2">
-          <span class="text-2xl font-bold text-secondary-foreground">NSAE</span>
-        </div>
-        <p class="mt-4 max-w-xs text-muted-foreground">
-          Supporting the community through resources, career guidance, and
-          active engagement.
-        </p>
+<footer class="border-t border-border bg-secondary p-8 pb-14 rounded-t-xl">
+  <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+    <div>
+      <div class="flex items-center gap-2">
+        <span class="text-2xl font-bold text-secondary-foreground">NSAE</span>
       </div>
-
-      <div
-        class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:col-span-2 lg:grid-cols-3"
-      >
-        <div>
-          <p class="font-medium text-secondary-foreground">Organization</p>
-          <ul class="mt-6 space-y-4 text-sm">
-            <li>
-              <a
-                href="/careers/page/1"
-                class="text-secondary-foreground transition hover:opacity-75"
-              >
-                Careers
-              </a>
-            </li>
-            <li>
-              <a
-                href="/past-committee/page/1"
-                class="text-secondary-foreground transition hover:opacity-75"
-              >
-                Past Committee
-              </a>
-            </li>
-            <li>
-              <a
-                href="/minutes/page/1"
-                class="text-secondary-foreground transition hover:opacity-75"
-              >
-                Minutes
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <p class="font-medium text-secondary-foreground">Resources</p>
-          <ul class="mt-6 space-y-4 text-sm">
-            <li>
-              <a
-                href="/resource/page/1"
-                class="text-secondary-foreground transition hover:opacity-75"
-              >
-                Resources
-              </a>
-            </li>
-            <li>
-              <a
-                href="/#faq-section"
-                class="text-secondary-foreground transition hover:opacity-75"
-              >
-                FAQ
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <p class="font-medium text-secondary-foreground">Get Involved</p>
-          <ul class="mt-6 space-y-4 text-sm">
-            <li>
-              <Button href="/donate" class={"bg-foreground"}>
-                Donate Now
-              </Button>
-            </li>
-          </ul>
-        </div>
-      </div>
+      <p class="mt-4 max-w-xs text-muted-foreground">
+        Supporting the community through resources, career guidance, and active
+        engagement.
+      </p>
     </div>
 
-    <div class="mt-12 border-t border-border pt-8">
-      <div class="sm:flex sm:items-center sm:justify-between">
-        <p class="text-xs text-muted-foreground">
-          &copy; {today.getFullYear()} NSAE. All rights reserved.
-        </p>
-
-        <ul
-          class="mt-4 flex flex-wrap items-center gap-4 text-xs sm:mt-0 lg:justify-end"
-        >
-          <li>
-            <button
-              id="theme-toggle"
-              aria-label="Toggle Dark Mode"
-              class="flex items-center text-muted-foreground transition hover:opacity-75 hover:text-foreground"
-            >
-              <img
-                src={Brightness.src}
-                alt="Toggle Theme"
-                class="h-5 w-5 dark:invert"
-              />
-            </button>
-          </li>
+    <div
+      class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:col-span-2 lg:grid-cols-3"
+    >
+      <div>
+        <p class="font-medium text-secondary-foreground">Organization</p>
+        <ul class="mt-6 space-y-4 text-sm">
           <li>
             <a
-              href="#"
-              class="text-muted-foreground transition hover:opacity-75"
+              href="/careers/page/1"
+              class="text-secondary-foreground transition hover:opacity-75"
             >
-              Terms & Conditions
+              Careers
             </a>
           </li>
           <li>
             <a
-              href="#"
-              class="text-muted-foreground transition hover:opacity-75"
+              href="/past-committee/page/1"
+              class="text-secondary-foreground transition hover:opacity-75"
             >
-              Privacy Policy
+              Past Committee
+            </a>
+          </li>
+          <li>
+            <a
+              href="/minutes/page/1"
+              class="text-secondary-foreground transition hover:opacity-75"
+            >
+              Minutes
             </a>
           </li>
         </ul>
       </div>
+
+      <div>
+        <p class="font-medium text-secondary-foreground">Resources</p>
+        <ul class="mt-6 space-y-4 text-sm">
+          <li>
+            <a
+              href="/resource/page/1"
+              class="text-secondary-foreground transition hover:opacity-75"
+            >
+              Resources
+            </a>
+          </li>
+          <li>
+            <a
+              href="/#faq-section"
+              class="text-secondary-foreground transition hover:opacity-75"
+            >
+              FAQ
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="font-medium text-secondary-foreground">Get Involved</p>
+        <ul class="mt-6 space-y-4 text-sm">
+          <li>
+            <Button href="/donate" class={"bg-foreground"}> Donate Now </Button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-12 border-t border-border pt-8">
+    <div class="sm:flex sm:items-center sm:justify-between">
+      <p class="text-xs text-muted-foreground">
+        &copy; {today.getFullYear()} NSAE. All rights reserved.
+      </p>
+
+      <ul
+        class="mt-4 flex flex-wrap items-center gap-4 text-xs sm:mt-0 lg:justify-end"
+      >
+        <li>
+          <button
+            id="theme-toggle"
+            aria-label="Toggle Dark Mode"
+            class="flex items-center text-muted-foreground transition hover:opacity-75 hover:text-foreground"
+          >
+            <img
+              src={Brightness.src}
+              alt="Toggle Theme"
+              class="h-5 w-5 dark:invert"
+            />
+          </button>
+        </li>
+        <li>
+          <a href="#" class="text-muted-foreground transition hover:opacity-75">
+            Terms & Conditions
+          </a>
+        </li>
+        <li>
+          <a href="#" class="text-muted-foreground transition hover:opacity-75">
+            Privacy Policy
+          </a>
+        </li>
+      </ul>
     </div>
   </div>
 </footer>
