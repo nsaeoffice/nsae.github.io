@@ -231,6 +231,32 @@ const categoriesCollection = defineCollection({
   }),
 });
 
+const donateCollection = defineCollection({
+  loader: file("src/content/donate.json"),
+  schema: ({ image }) =>
+    z.object({
+      id: z.string(),
+      heroImage: z.string(),
+      title: z.string(), // HTML string allowed
+      description: z.string(),
+      impactAreas: z.array(
+        z.object({
+          title: z.string(),
+          icon: z.string(), // We store the string name (e.g., "School")
+          description: z.string(),
+        })
+      ),
+      bankDetails: z.object({
+        bankName: z.string(),
+        accountName: z.string(),
+        accountNumber: z.string(),
+        branch: z.string(),
+        swift: z.string().optional(),
+        accountQRCode: image(),
+      }),
+    }),
+});
+
 // === Contacts Collection ===
 const contactsCollection = defineCollection({
   loader: file("src/content/contacts/contacts.json"),
@@ -514,4 +540,5 @@ export const collections = {
   events: eventsCollection,
   resources: resourcesCollection,
   banners: bannersCollection,
+  donate: donateCollection,
 };

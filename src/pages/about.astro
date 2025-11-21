@@ -73,7 +73,7 @@ const focusAreas = [
 ];
 
 const AboutHeroImg =
-  "https://images.unsplash.com/photo-1625246333195-58f21c018a2b?q=80&w=1974&auto=format&fit=crop";
+  "https://plus.unsplash.com/premium_photo-1661962692059-55d5a4319814?q=80&w=1074&auto=format&fit=crop";
 
 function formatPosition(position: string) {
   return position
@@ -88,7 +88,7 @@ function formatPosition(position: string) {
   description="Engineering the Future of Agriculture in Nepal."
 >
   <section
-    class="relative rounded-2xl flex min-h-[60vh] md:min-h-[75vh] items-center overflow-hidden px-6 py-20 md:px-12 md:py-32 text-white"
+    class="rounded-2xl relative flex min-h-[60vh] md:min-h-[75vh] items-center overflow-hidden px-6 py-20 md:px-12 md:py-32 text-white"
   >
     <div class="absolute top-32 left-6 md:left-12 z-20 hidden md:block">
       <span
@@ -110,11 +110,12 @@ function formatPosition(position: string) {
         class="font-sans text-5xl md:text-7xl lg:text-8xl font-medium leading-[0.9] tracking-tighter"
       >
         Engineering the <br />
-        <span class="text-primary-foreground/80">Future of Agriculture</span>
+
+        <span class="text-white/80">Future of Agriculture</span>
       </h1>
 
       <p
-        class="font-sans text-lg md:text-xl text-white/80 max-w-2xl leading-relaxed"
+        class="font-sans text-lg md:text-xl text-white/90 max-w-2xl leading-relaxed"
       >
         The Nepal Society of Agricultural Engineers (NSAE) is dedicated to
         advancing the profession and promoting sustainable agricultural
@@ -164,15 +165,15 @@ function formatPosition(position: string) {
           <div class="grid gap-6">
             {
               values.map((val) => (
-                <div class="group flex gap-4 p-4 rounded-xl border border-border/50 bg-secondary/20 hover:bg-secondary/40 transition-colors">
-                  <div class="p-2 h-fit rounded-lg bg-primary/10 text-primary">
-                    <val.icon class="size-5" />
+                <div class="group flex gap-4 p-5 rounded-xl border border-border/50 bg-card/50 hover:bg-secondary/40 transition-colors">
+                  <div class="p-2 h-fit rounded-lg bg-primary/10 text-primary shrink-0">
+                    <val.icon class="size-6" />
                   </div>
                   <div>
-                    <h3 class="font-sans font-medium text-lg mb-1">
+                    <h3 class="font-sans font-medium text-lg mb-1 text-foreground">
                       {val.title}
                     </h3>
-                    <p class="font-sans text-sm text-muted-foreground leading-relaxed">
+                    <p class="font-sans text-sm text-foreground/70 leading-relaxed">
                       {val.description}
                     </p>
                   </div>
@@ -190,12 +191,12 @@ function formatPosition(position: string) {
             umbrella to foster professional growth, ethical standards, and
             technological advancement.
           </p>
-          <p>
+          <p class="text-foreground/80">
             By collaborating with governmental bodies, educational institutions,
             and the private sector, we strive to influence policies that enhance
             food security and rural development.
           </p>
-          <p>
+          <p class="text-foreground/80">
             We believe that engineering solutions are the key to unlocking
             Nepal's agricultural potential. From irrigation systems to
             post-harvest technology, our members are at the forefront of
@@ -204,13 +205,13 @@ function formatPosition(position: string) {
 
           <div class="my-12 not-prose">
             <div
-              class="bg-primary/5 rounded-3xl p-8 border border-primary/10 relative overflow-hidden"
+              class="bg-secondary/40 dark:bg-secondary/20 rounded-3xl p-8 border border-border relative overflow-hidden"
             >
               <Quote
-                class="absolute top-6 left-6 size-10 text-primary/10 rotate-180"
+                class="absolute top-6 left-6 size-10 text-primary/20 rotate-180"
               />
               <p
-                class="relative z-10 font-sans text-xl font-medium italic text-center pt-4 pb-2"
+                class="relative z-10 font-sans text-xl font-medium italic text-center pt-4 pb-2 text-foreground"
               >
                 "Agriculture is the most healthful, most useful, and most noble
                 employment of man."
@@ -226,7 +227,6 @@ function formatPosition(position: string) {
       </div>
     </section>
 
-    {/* --- NEW: STRATEGIC FOCUS SECTION --- */}
     <section class="px-6 md:px-12">
       <div
         class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6"
@@ -260,8 +260,10 @@ function formatPosition(position: string) {
               <div class="mb-6 w-12 h-12 rounded-full bg-background border border-border flex items-center justify-center text-muted-foreground group-hover:text-primary group-hover:border-primary/50 transition-colors">
                 <area.icon class="size-6" />
               </div>
-              <h3 class="font-sans text-2xl font-medium mb-3">{area.title}</h3>
-              <p class="font-sans text-muted-foreground leading-relaxed">
+              <h3 class="font-sans text-2xl font-medium mb-3 text-foreground">
+                {area.title}
+              </h3>
+              <p class="font-sans text-foreground/70 leading-relaxed">
                 {area.content}
               </p>
             </div>
@@ -270,7 +272,6 @@ function formatPosition(position: string) {
       </div>
     </section>
 
-    {/* --- EXECUTIVE COMMITTEE SECTION (Dynamic) --- */}
     <section class="px-6 md:px-12">
       <div
         class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6"
@@ -358,7 +359,7 @@ function formatPosition(position: string) {
 
     <section class="px-6 md:px-12 pb-12">
       <div
-        class="bg-primary text-primary-foreground rounded-3xl p-8 md:p-16 text-center flex flex-col items-center gap-8 relative overflow-hidden"
+        class="bg-secondary text-secondary-foreground rounded-3xl p-8 md:p-16 text-center flex flex-col items-center gap-8 relative overflow-hidden"
       >
         <div class="relative z-10 flex flex-col items-center gap-6">
           <h2
@@ -366,7 +367,7 @@ function formatPosition(position: string) {
           >
             Ready to shape the future of agriculture?
           </h2>
-          <p class="text-primary-foreground/80 max-w-xl font-sans text-lg">
+          <p class="text-secondary-foreground/80 max-w-xl font-sans text-lg">
             Join a community of innovators, researchers, and engineers working
             towards a sustainable future.
           </p>
