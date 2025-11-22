@@ -4,14 +4,14 @@
     "heroImage": "https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?q=80&w=2070&auto=format&fit=crop",
     "impactAreas": [
       {
-        "title": "Student Scholarships",
-        "icon": "School",
-        "description": "Providing financial aid to deserving agricultural engineering students."
+        "title": "Engineering Professional Development",
+        "icon": "Profession",
+        "description": "Conducting varios activities for professional development of agricultural engineers."
       },
       {
-        "title": "Research Grants",
-        "icon": "Microscope",
-        "description": "Funding innovative research projects that solve local agricultural challenges."
+        "title": "Research and Development",
+        "icon": "Research",
+        "description": "Conducting research for the development of agriculture and engineering to solve the problem of society."
       },
       {
         "title": "Community Outreach",
@@ -20,12 +20,12 @@
       }
     ],
     "bankDetails": {
-      "bankName": "Nepal Bank Limited",
-      "accountName": "Nepal Society of Agricultural Engineers",
-      "accountNumber": "00101000000001",
-      "branch": "Kathmandu Branch",
-      "swift": "NEPLNPKA",
-      "accountQRCode": "../assets/qrcode_localhost.png"
+      "bankName": "Agricultural Development Bank limited",
+      "accountName": "Nepalese Society of Agricultural Engineers",
+      "accountNumber": "0211600180212012",
+      "branch": "Lagankhel, Lalitpur",
+      "swift": "",
+      "accountQRCode": "../assets/250505_NSAE_Banking_Detail.png"
     }
   }
 ]
