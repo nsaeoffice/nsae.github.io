@@ -7,9 +7,12 @@ import ArrowNarrowRight from "@tabler/icons/outline/arrow-narrow-right.svg";
 import AvatarGroup from "../AvatarGroup.astro";
 import Separator from "../Separator";
 import Image from "astro/components/Image.astro";
+import { cn } from "@/lib/utils";
 
-type Props = CollectionEntry<"posts">;
-const { id, data } = Astro.props;
+type Props = CollectionEntry<"posts"> & {
+  class?: string;
+};
+const { id, data, class: className } = Astro.props;
 const {
   title,
   subtitle,
@@ -25,12 +28,15 @@ const categoriesData = categories ? await getEntries(categories) : null;
 ---
 
 <article
-  class="split-card gap-4 gap-x-6 cursor-pointer group grid grid-cols-1 md:grid-cols-2 p-0 md:p-0 bg-secondary text-secondary-foreground rounded-2xl"
+  class={cn(
+    "split-card gap-4 gap-x-6 cursor-pointer group grid grid-cols-1 md:grid-cols-2 p-0 md:p-0 bg-secondary text-secondary-foreground rounded-2xl",
+    className
+  )}
 >
   <div
     class="col-span-1 flex flex-col min-h-64 gap-2 p-4 md:p-6 order-2 md:order-1"
   >
-    <div class="flex flex-row justify-between items-center">
+    <div class="flex flex-row flex-wrap gap-2 justify-between items-center">
       {
         categoriesData ? (
           <Categories badgeVariant={"outline"} categories={categoriesData} />

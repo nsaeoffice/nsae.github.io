@@ -1,10 +1,9 @@
 ---
 backgroundImage: ../../assets/blog-placeholder-3.jpg
 contentPosition: left
-subtitle: until the 'Cultivating Futures' symposium begins
-countdownTarget: 2025-11-24T22:44:00+5:45
-title: THE SOIL SENSES
-description: A Deep Dive into Rhizosphere Ecology and Sustainable Farming Practices
+countdownTarget: 2026-01-29T22:44:00+5:45
+title: International conference 2026
+description: on agricultural engineerng and climate smart agriculture
 buttonText: Register Now
 buttonLink: "/events/annual-engineering-conference-2025/"
 buttonState: active

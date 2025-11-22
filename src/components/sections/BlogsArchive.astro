@@ -10,8 +10,7 @@ import ArrowRight from "@tabler/icons/outline/arrow-right.svg";
 const allPublishedPosts = (
   await getCollection("posts", ({ data }) => {
     return (
-      import.meta.env.MODE !== "production" ||
-      data.draft === false ||
+      (import.meta.env.MODE !== "production" || data.draft === false) &&
       data.type === "blog"
     );
   })
@@ -62,8 +61,8 @@ if (featuredPosts.length > 0) {
       <div class="grid grid-cols-2 gap-4">
         {mainFeature && (
           <div class="col-span-2 lg:col-span-1 bg-secondary p-4 rounded-2xl border border-border/50">
-            <ClickableCard href={`/blog/${mainFeature.id}/`}>
-              <BlogFeaturedCard {...mainFeature} />
+            <ClickableCard href={`/${mainFeature.id}/`}>
+              <BlogFeaturedCard class="md:grid-cols-1" {...mainFeature} />
             </ClickableCard>
           </div>
         )}
@@ -77,10 +76,9 @@ if (featuredPosts.length > 0) {
           {sideListPosts.map((post) => (
             <ClickableCard
               class="group relative border-b border-border last:border-b-0 hover:bg-secondary transition-colors duration-300 overflow-hidden"
-              href={`/blog/${post.id}/`}
+              href={`/${post.id}/`}
             >
               <BlogCard {...post} />
-              {/* Refined the hover image effect */}
               {post.data.heroImage && (
                 <Image
                   inferSize

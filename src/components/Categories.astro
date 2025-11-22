@@ -32,7 +32,7 @@ const shouldShowBadge = !showAll && totalCount > visibleCategoriesCount;
 const remainingCount = totalCount - visibleCategoriesCount;
 ---
 
-<div class="flex flex-row gap-2 font-mono">
+<div class="flex flex-row gap-2 font-mono flex-wrap">
   {
     categoriesToDisplay.map((item) => {
       return (

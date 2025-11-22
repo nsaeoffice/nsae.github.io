@@ -1,6 +1,6 @@
 ---
 title: "International Conference 2026"
-subtitle: "on Agricultural Engineering and Climate Smart Agriculture"
+subtitle: "on agricultural engineering and climate smart agriculture"
 coverImage: "../../assets/251122_IC2026.jpg"
 eventStart: 2026-01-29 09:00:00
 eventEnd: 2026-01-30 17:00:00
@@ -78,7 +78,7 @@ The **National Engineering Conference 2025** brings together professionals, acad
 
 We are currently accepting papers on the following themes:
 
-1. Green Building Technology
+1. Green Building precision-agriculture
 2. Smart City Planning
 3. Disaster Risk Management
 
