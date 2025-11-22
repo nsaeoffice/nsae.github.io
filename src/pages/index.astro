@@ -1,22 +1,16 @@
 ---
-import Badge from "@/components/astro/Badge.astro";
 import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
 import PageLayout from "@/layouts/PageLayout.astro";
-import Button from "@/components/astro/Button/Button.astro";
-import { Image } from "astro:assets";
-import homeimage from "../assets/nsae_logo.jpg";
 
-// Sections
 import Faq from "@/components/sections/Faq.astro";
 import BlogsArchive from "@/components/sections/BlogsArchive.astro";
 import BannersArchive from "@/components/sections/BannersArchive.astro";
 import MissionBrief from "@/components/sections/MissionBrief.astro";
 import Memberships from "@/components/sections/Memberships.astro";
 
-// Icons
-import ArrowDown from "@tabler/icons/outline/arrow-down.svg";
 import AnnouncementRibbon from "@/components/astro/AnnouncementRibbon.astro";
 import { getCollection } from "astro:content";
+import HomeHero from "@/components/sections/HomeHero.astro";
 
 const allNotices = await getCollection("posts", ({ data }) => {
   return (
@@ -42,86 +36,7 @@ const latestNotice = allNotices.sort(
       />
     )
   }
-  <section
-    class="relative flex min-h-[85vh] items-center overflow-hidden px-6 py-20 md:px-12 md:py-32"
-  >
-    <div class="absolute top-32 left-6 md:left-12 z-20 hidden md:block">
-      <span
-        class="font-mono text-xs text-white/60 tracking-widest uppercase vertical-lr"
-      >
-        [ Regd.No.29/046/047 ]
-      </span>
-    </div>
-
-    <div class="relative z-20 flex max-w-5xl flex-col gap-8 md:gap-10 mt-12">
-      <h2
-        class="font-sans text-[3.5rem] font-medium leading-[0.9] text-white md:text-[7rem] tracking-tighter"
-      >
-        <div class="relative inline-block">
-          <span
-            class="font-bold italic underline decoration-2 underline-offset-12 decoration-white/30"
-          >
-            Engineering
-          </span>
-          <Badge
-            class="absolute -top-8 -right-12 rotate-12 font-mono text-xs tracking-wide border-white/40"
-            size="sm"
-          >
-            EST. 1990
-          </Badge>
-        </div>
-        <br />
-        <span class="text-white/80">Tomorrow’s Food &</span>
-        <br />
-        <span class="text-white/80">Environmental Systems</span>
-      </h2>
-
-      <p class="max-w-xl text-lg text-white/70 font-sans leading-relaxed">
-        NSAE connects leading engineers, scientists, and students dedicated to
-        creating practical solutions for real‑world agricultural challenges.
-      </p>
-
-      <div class="mt-4 flex items-center gap-6 dark">
-        <Button
-          href={"/contact"}
-          class="rounded-full px-8 py-4 font-sans font-medium"
-        >
-          Get in Touch
-        </Button>
-
-        <a
-          href="#mission-brief"
-          class="font-mono text-xs text-white/60 uppercase tracking-widest hover:text-white transition-colors flex items-center gap-2"
-        >
-          ( Explore ) <ArrowDown class="w-3 h-3" />
-        </a>
-      </div>
-    </div>
-
-    <div class="absolute inset-0 z-10">
-      <div
-        class="absolute rounded-2xl inset-0 z-20 bg-linear-to-r from-black/80 via-black/50 to-transparent"
-      >
-      </div>
-      <div class="absolute inset-0 z-10 bg-black/40 rounded-2xl"></div>
-
-      <Image
-        class="absolute inset-0 h-full w-full object-cover rounded-2xl"
-        alt="Agricultural Engineering"
-        inferSize
-        src={homeimage}
-      />
-    </div>
-
-    <div
-      class="absolute bottom-10 right-12 z-20 hidden md:flex items-center gap-4"
-    >
-      <span class="font-mono text-xs text-white/50 uppercase"
-        >Scroll to explore</span
-      >
-      <div class="h-[1px] w-12 bg-white/30"></div>
-    </div>
-  </section>
+  <HomeHero />
 
   <MissionBrief />
   <Memberships />

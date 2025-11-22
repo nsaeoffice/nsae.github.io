@@ -17,6 +17,7 @@ export default defineConfig({
   prefetch: true,
   redirects: {
     "/blog": "/blog/page/1",
+    "/notices": "/notices/page/1",
     "/careers": "/careers/page/1",
     "/past-committee": "/past-committee/page/1",
     "/resources": "/resources/page/1",
