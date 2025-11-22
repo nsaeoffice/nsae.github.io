@@ -4,6 +4,7 @@ import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
 import PageLayout from "@/layouts/PageLayout.astro";
 import Button from "@/components/astro/Button/Button.astro";
 import { Image } from "astro:assets";
+import homeimage from "../assets/nsae_logo.jpg";
 
 // Sections
 import Faq from "@/components/sections/Faq.astro";
@@ -24,7 +25,7 @@ import ArrowDown from "@tabler/icons/outline/arrow-down.svg";
       <span
         class="font-mono text-xs text-white/60 tracking-widest uppercase vertical-lr"
       >
-        [ LAT: 27.7172° N ]
+        [ Regd.No.29/046/047 ]
       </span>
     </div>
 
@@ -42,7 +43,7 @@ import ArrowDown from "@tabler/icons/outline/arrow-down.svg";
             class="absolute -top-8 -right-12 rotate-12 font-mono text-xs tracking-wide border-white/40"
             size="sm"
           >
-            EST. 2024
+            EST. 1990
           </Badge>
         </div>
         <br />
@@ -61,7 +62,7 @@ import ArrowDown from "@tabler/icons/outline/arrow-down.svg";
           href={"/contact"}
           class="rounded-full px-8 py-4 font-sans font-medium"
         >
-          Join the Collective
+          Get in Touch
         </Button>
 
         <a
@@ -84,7 +85,7 @@ import ArrowDown from "@tabler/icons/outline/arrow-down.svg";
         class="absolute inset-0 h-full w-full object-cover rounded-2xl"
         alt="Agricultural Engineering"
         inferSize
-        src={"https://cdn.prod.website-files.com/68d7c06dc68ea0c551b91d3d/68dbbabca616d78487b19aa2_Home%20A.webp"}
+        src={homeimage}
       />
     </div>
 
