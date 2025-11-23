@@ -1,0 +1,78 @@
+---
+import Map from "@tabler/icons/outline/map.svg";
+import LinkIcon from "@tabler/icons/outline/link.svg";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  location: CollectionEntry<"events">["data"]["location"];
+}
+const { location } = Astro.props;
+---
+
+{
+  location && (
+    <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+      <div class="p-6">
+        <h3 class="font-sans text-xl font-medium tracking-tight mb-4">
+          Event Details
+        </h3>
+        <div class="flex flex-col gap-3 text-sm">
+          {location.type !== "online" && (
+            <>
+              {location.venueName && (
+                <span class="font-sans font-medium text-base">
+                  {location.venueName}
+                </span>
+              )}
+              {(location.address || location.city) && (
+                <span class="font-sans text-muted-foreground">
+                  {[location.address, location.city, location.state]
+                    .filter(Boolean)
+                    .join(", ")}
+                </span>
+              )}
+              {location.mapsLink && (
+                <a
+                  href={location.mapsLink}
+                  target="_blank"
+                  class="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-primary hover:underline mt-1"
+                >
+                  <Map class="h-4 w-4" /> View on Map
+                </a>
+              )}
+            </>
+          )}
+          {location.type !== "in_person" && (
+            <div class="flex flex-col gap-2 mt-2 pt-2 border-t border-dashed">
+              {location.meetingUrl && (
+                <a
+                  href={location.meetingUrl}
+                  target="_blank"
+                  class="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-primary hover:underline"
+                >
+                  <LinkIcon class="h-4 w-4" /> Join Online Meeting
+                </a>
+              )}
+              {location.meetingId && (
+                <p class="font-sans">
+                  Meeting ID:{" "}
+                  <span class="font-mono bg-muted px-1 rounded ml-1">
+                    {location.meetingId}
+                  </span>
+                </p>
+              )}
+              {location.meetingPassword && (
+                <p class="font-sans">
+                  Password:{" "}
+                  <span class="font-mono bg-muted px-1 rounded ml-1">
+                    {location.meetingPassword}
+                  </span>
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}

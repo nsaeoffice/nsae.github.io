@@ -1,0 +1,90 @@
+---
+import User from "@tabler/icons/outline/user.svg";
+import Building from "@tabler/icons/outline/building.svg";
+import { Image } from "astro:assets";
+import { getEntries, type CollectionEntry } from "astro:content";
+
+interface Props {
+  instructors: CollectionEntry<"events">["data"]["instructors"];
+}
+
+const { instructors = [] } = Astro.props;
+
+const nsaeMemberRefs = instructors
+  .filter((inst) => inst.instructorType === "nsae_member" && inst.nsaeMember)
+  .map((inst) => inst.nsaeMember!);
+
+const authorEntries = await getEntries(nsaeMemberRefs);
+
+type Instructor = NonNullable<
+  CollectionEntry<"events">["data"]["instructors"]
+>[number];
+type ResolvedInstructor = Instructor & {
+  authorData?: CollectionEntry<"authors">["data"];
+};
+
+const resolvedInstructors: ResolvedInstructor[] = instructors.map((inst) => {
+  if (inst.instructorType === "nsae_member" && inst.nsaeMember) {
+    const matchingEntry = authorEntries.find(
+      (e) => e.id === inst.nsaeMember?.id
+    );
+    return { ...inst, authorData: matchingEntry?.data };
+  }
+  return inst;
+});
+---
+
+{
+  resolvedInstructors && resolvedInstructors.length > 0 && (
+    <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+      <div class="p-6">
+        <h3 class="font-sans text-xl font-medium tracking-tight mb-4">
+          Instructors & Speakers
+        </h3>
+        <div class="flex flex-col gap-4">
+          {resolvedInstructors.map((instructor) => {
+            let name = instructor.externalName;
+            let position = instructor.externalPosition || "Instructor";
+            let imageSrc = instructor.photo;
+
+            if (
+              instructor.instructorType === "nsae_member" &&
+              instructor.authorData
+            ) {
+              name = instructor.authorData.name;
+              position = instructor.authorData.position || "NSAE Member";
+              imageSrc = instructor.authorData.profileImage;
+            } else if (instructor.instructorType === "organization") {
+              name = instructor.organizationName;
+              position = "Organization";
+            }
+
+            return (
+              <div class="flex items-center gap-3">
+                <div class="relative h-10 w-10 shrink-0 overflow-hidden rounded-full bg-muted flex items-center justify-center">
+                  {imageSrc && typeof imageSrc === "object" ? (
+                    <Image
+                      src={imageSrc}
+                      alt={name || ""}
+                      class="aspect-square h-full w-full object-cover"
+                    />
+                  ) : instructor.instructorType === "organization" ? (
+                    <Building class="size-4 text-muted-foreground" />
+                  ) : (
+                    <User class={"size-4 text-muted-foreground"} />
+                  )}
+                </div>
+                <div class="text-sm">
+                  <p class="font-sans font-medium">{name}</p>
+                  <p class="font-sans text-muted-foreground text-xs">
+                    {position}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  )
+}
