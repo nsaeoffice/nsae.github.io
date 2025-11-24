@@ -298,6 +298,12 @@ const contactsCollection = defineCollection({
             link: z.string().url(),
           })
           .optional(),
+        github: z
+          .object({
+            handle: z.string().optional(),
+            link: z.string().url(),
+          })
+          .optional(),
       })
       .optional(),
   }),
