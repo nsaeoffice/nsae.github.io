@@ -109,7 +109,7 @@ function formatPosition(position: string) {
       </div>
 
       <h1
-        class="font-sans text-5xl md:text-7xl lg:text-8xl font-medium leading-[1.02] tracking-tighter"
+        class="font-sans text-5xl md:text-7xl lg:text-8xl font-medium leading-[1.02] tracking-tighter invisible"
       >
         <span class="anim-split-text inline-block">Engineering the</span>
         <br />
@@ -161,7 +161,7 @@ function formatPosition(position: string) {
             </span>
           </div>
           <h2
-            class="anim-split-heading font-sans text-4xl md:text-6xl font-medium tracking-tighter leading-tight"
+            class="anim-split-heading invisible font-sans text-4xl md:text-6xl font-medium tracking-tighter leading-tight"
           >
             Bridging traditional farming with modern engineering.
           </h2>
@@ -235,7 +235,7 @@ function formatPosition(position: string) {
             </span>
           </div>
           <h2
-            class="anim-split-heading font-sans text-4xl md:text-5xl font-medium tracking-tighter text-balance"
+            class="anim-split-heading font-sans text-4xl md:text-5xl font-medium tracking-tighter text-balance invisible"
           >
             Strategic Focus
           </h2>
@@ -428,7 +428,7 @@ function formatPosition(position: string) {
       0.3
     );
 
-    heroTl.from(
+    heroTl.set(".about-hero-section h1", { autoAlpha: 1 }, 0.4).from(
       heroSplit.lines,
       {
         yPercent: 100,
@@ -437,7 +437,7 @@ function formatPosition(position: string) {
         stagger: 0.1,
         ease: "power4.out",
       },
-      0.4
+      "<"
     );
 
     heroTl.to(
@@ -478,6 +478,7 @@ function formatPosition(position: string) {
 
     missionTl
       .to(".anim-mission-header", { opacity: 1, duration: 0.5 })
+      .set(".mission-section .anim-split-heading", { autoAlpha: 1 }, "-=0.3")
       .from(
         missionSplit.words,
         {
@@ -486,7 +487,7 @@ function formatPosition(position: string) {
           stagger: 0.02,
           ease: "power4.out",
         },
-        "-=0.3"
+        "<"
       )
       .to(
         [".anim-value-card", ".anim-mission-text"],
@@ -514,6 +515,8 @@ function formatPosition(position: string) {
 
     focusTl
       .to(".anim-focus-header", { opacity: 1, duration: 0.5 })
+      .set(".focus-section .anim-split-heading", { autoAlpha: 1 }, "-=0.3")
+
       .from(
         focusSplit.chars,
         {
@@ -523,7 +526,7 @@ function formatPosition(position: string) {
           stagger: 0.02,
           ease: "back.out",
         },
-        "-=0.3"
+        "<"
       )
       .to(
         ".anim-focus-card",
